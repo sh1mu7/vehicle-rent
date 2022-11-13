@@ -16,9 +16,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'advertisement.apps.AdvertisementConfig',
+    'core.apps.CoreConfig',
+
+    # 3rd Party
     "rest_framework",
     'drf_spectacular',
-    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +65,19 @@ AUTH_USER_MODEL = 'core.User'
 REST_FRAMEWORK = {
     'COMPONENT_SPLIT_REQUEST': True,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Vehicle Rent API',
+    'DESCRIPTION': 'A Vehicle Rental System',
+    'VERSION': '1.0.0',
+    'SCHEMA_PATH_PREFIX': '/api/v[0-9]',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'CONTACT': {
+        'name': 'Mahmudul Hasan',
+        'email': 'hasaanshimul@gmail.com'
+    },
+    # OTHER SETTINGS
 }
 
 AUTH_PASSWORD_VALIDATORS = [

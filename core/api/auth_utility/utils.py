@@ -1,17 +1,8 @@
-from datetime import datetime, timedelta
 
-import jwt
-from django.conf import settings
 from django.core.mail import send_mail
-from decouple import config
-from core.models import Otp
+
+
 from rest_framework_simplejwt.tokens import RefreshToken
-
-
-# def token_generator(user):
-#     token = jwt.encode({'email': user['email'], 'exp': datetime.utcnow() + timedelta(hours=24), }, settings.SECRET_KEY,
-#                        algorithms='HS256')
-#     return token
 
 
 def get_tokens_for_user(user):

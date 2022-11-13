@@ -3,34 +3,33 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from . import serializers
 from rest_framework.viewsets import ModelViewSet
-from core.models import User, Country
-from rest_framework import permissions, status
+from core.models import User, Country, CarInformation
+from rest_framework import permissions, status, viewsets
 from .auth_utility.utils import send_verification_email
 from .serializers import LoginSerializer
 
 
-class UserList(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = serializers.UserSerializer
+# class UserList(ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = serializers.UserSerializer
 
 
-class CountryList(ModelViewSet):
-    queryset = Country.objects.all()
-    serializer_class = serializers.CountrySerializer
+# class CountryList(ModelViewSet):
+#     queryset = Country.objects.all()
+#     serializer_class = serializers.CountrySerializer
 
 
-class SignupAPI(APIView):
+class RegisterAPI(APIView):
     permission_classes = [AllowAny, ]
 
     def post(self, request):
         serializer = serializers.RegisterSerializer(data=request.data, context={"request": self.request})
-
         if serializer.is_valid():
             user = serializer.save()
             current_site = get_current_site(request).domain
@@ -70,3 +69,8 @@ class LoginAPI(APIView):
             serializer = LoginSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response({'message': "Invalid Credential"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class CarAPI(ModelViewSet):
+    queryset = CarInformation.objects.all()
+    serializer_class = serializers.CarSerializer

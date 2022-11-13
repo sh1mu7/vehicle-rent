@@ -5,6 +5,7 @@ from django.contrib.auth.models import BaseUserManager
 
 class MyUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
+        extra_fields.setdefault('address', 'null')
         if not email:
             raise ValueError('The Email must be set')
         email = self.normalize_email(email)
@@ -21,6 +22,7 @@ class MyUserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_verified', True)
         extra_fields.setdefault('is_approved', True)
+        extra_fields.setdefault('address', 'null')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('Superuser must have is_staff=True.')

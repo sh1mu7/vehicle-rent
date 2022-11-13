@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-
 import jwt
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
@@ -24,6 +23,16 @@ class Country(BaseModel):
         return self.name
 
 
+class Address(BaseModel):
+    house_no = models.CharField(max_length=30)
+    street = models.TextField(max_length=100)
+    city = models.TextField(max_length=50)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.country
+
+
 class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -32,8 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     dob = models.DateField()
     image = models.ImageField(null=True)
     gender = models.SmallIntegerField(choices=constants.GenderChoices.choices, default=constants.GenderChoices.MALE)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, db_constraint=False)
-    wallet = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
     is_verified = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -53,7 +61,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @cached_property
     def get_country_name(self):
-        return self.country.name
+        return self.address.country.name
+
+    @property
+    def car(self):
+        return self.carinformation_set.all()
 
     @property
     def token(self):
@@ -62,7 +74,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         return token
 
 
-class Otp(BaseModel):
-    code = models.CharField(max_length=6)
-    email = models.EmailField()
-    is_used = models.BooleanField(default=False)
+class CarInformation(BaseModel):
+    user = models.ForeignKey('core.User', on_delete=models.CASCADE)
+    brand = models.CharField(max_length=100, blank=False,null=False)
+    model = models.CharField(max_length=100, blank=False,null=False)
+    number_plate = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.number_plate
