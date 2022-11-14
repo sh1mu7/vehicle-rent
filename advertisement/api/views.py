@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from advertisement.permissions import IsCreationOrIsAuthenticated
+from rest_framework.permissions import IsAuthenticated
 from advertisement.api import serializers
 from advertisement.models import Advertisement
 
@@ -7,4 +7,4 @@ from advertisement.models import Advertisement
 class AdvertisementAPI(ModelViewSet):
     queryset = Advertisement.objects.all()
     serializer_class = serializers.AdvertisementSerializer
-    permission_classes = [IsCreationOrIsAuthenticated]
+    permission_classes = [IsAuthenticated]

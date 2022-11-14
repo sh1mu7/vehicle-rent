@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     dob = models.DateField()
     image = models.ImageField(null=True)
     gender = models.SmallIntegerField(choices=constants.GenderChoices.choices, default=constants.GenderChoices.MALE)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True)
     is_verified = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
